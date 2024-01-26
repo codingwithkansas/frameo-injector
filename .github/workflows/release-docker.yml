@@ -23,7 +23,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            return context.payload.ref.replace(/\/refs\/tags\//, '');
+            return context.payload.ref.replace(/refs\/tags\//, '');
       - name: 'Build Inventory Image'
         run: |
           docker build --file Dockerfile . -t "ghcr.io/codingwithkansas/frameo-injector:${{ steps.releaseTag.outputs.result }}"
