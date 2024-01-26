@@ -2,5 +2,5 @@
 
 ```
 helm repo add codingwithkansas-frameo https://codingwithkansas.github.io/frameo-injector/
-helm search codingwithkansas-frameo
+helm search repo codingwithkansas-frameo
 ```
