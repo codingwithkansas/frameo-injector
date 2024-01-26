@@ -17,10 +17,14 @@ jobs:
           registry: ghcr.io
           username: ${{github.actor}}
           password: ${{secrets.GITHUB_TOKEN}}
-      - name: Compute Release Tag
+      - name: Extract tag name
         id: releaseTag
-        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+        uses: actions/github-script@0.2.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            return context.payload.ref.replace(/\/refs\/tags\//, '');
       - name: 'Build Inventory Image'
         run: |
-          docker build --file Dockerfile . -t "ghcr.io/codingwithkansas/frameo-injector:${{ steps.releaseTag.outputs.sha_short }}"
-          docker push "ghcr.io/codingwithkansas/frameo-injector:${{ steps.releaseTag.outputs.sha_short }}"
+          docker build --file Dockerfile . -t "ghcr.io/codingwithkansas/frameo-injector:${{ steps.releaseTag.outputs.result }}"
+          docker push "ghcr.io/codingwithkansas/frameo-injector:${{ steps.releaseTag.outputs.result }}"
