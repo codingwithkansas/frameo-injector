@@ -1,0 +1,26 @@
+name: Publish Release
+on:
+  push:
+    tags:
+      - '**'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: 'Login to GitHub Container Registry'
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+      - name: Compute Release Tag
+        id: releaseTag
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      - name: 'Build Inventory Image'
+        run: |
+          docker build --file Dockerfile . -t "ghcr.io/codingwithkansas/frameo-injector:${{ steps.releaseTag.outputs.sha_short }}"
+          docker push "ghcr.io/codingwithkansas/frameo-injector:${{ steps.releaseTag.outputs.sha_short }}"
