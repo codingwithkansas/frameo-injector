@@ -1,0 +1,15 @@
+schedule: "0 3 * * *"
+image:
+  repository: ""
+  tag: ""
+  imagePullPolicy: IfNotPresent
+
+# Env Config Secret
+secret:
+  name: ""
+
+# ADB KeyFile Secret
+adbSecret:
+  name: ""
+  privateKeySubPath: "adbkey"
+  publicKeySubPath: "adbkey.pub"

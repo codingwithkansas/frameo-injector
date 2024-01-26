@@ -1,0 +1,15 @@
+FROM --platform=linux/amd64 node:18
+
+RUN apt-get update \
+    && apt-get install -y curl \
+    && curl --output "/tmp/platform-tools-latest-linux.zip" "https://dl.google.com/android/repository/platform-tools_r34.0.5-linux.zip" \
+    && unzip -d "/tmp" "/tmp/platform-tools-latest-linux.zip" \
+    && ln -s /tmp/platform-tools/adb /usr/bin/adb
+
+# Make default ADBKey
+RUN adb start-server \
+    && adb kill-server
+
+WORKDIR /src
+ENV VERSION="0.1.0"
+ENTRYPOINT ["/bin/bash", "-c"]
