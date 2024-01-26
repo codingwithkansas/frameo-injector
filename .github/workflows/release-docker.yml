@@ -26,5 +26,6 @@ jobs:
             return context.payload.ref.replace(/refs\/tags\//, '');
       - name: 'Build Inventory Image'
         run: |
+          echo "Building docker tag frameo-injector:${{ steps.releaseTag.outputs.result }}"
           docker build --file Dockerfile . -t "ghcr.io/codingwithkansas/frameo-injector:${{ steps.releaseTag.outputs.result }}"
           docker push "ghcr.io/codingwithkansas/frameo-injector:${{ steps.releaseTag.outputs.result }}"
