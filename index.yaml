@@ -2,6 +2,15 @@ apiVersion: v1
 entries:
   FrameoInjector:
   - apiVersion: v1
+    appVersion: 1.0.1
+    created: "2024-01-27T01:23:45.470276864Z"
+    description: Frameo Injector CronJob
+    digest: 0008e1428a3fa8bbaa5a13e0cae1bf69726993d1f801b85fe708f992eb6346a7
+    name: FrameoInjector
+    urls:
+    - https://github.com/codingwithkansas/frameo-injector/releases/download/FrameoInjector-1.0.1/FrameoInjector-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v1
     appVersion: 1.0.0
     created: "2024-01-27T00:59:43.010794991Z"
     description: Frameo Injector CronJob
@@ -37,4 +46,4 @@ entries:
     urls:
     - https://github.com/codingwithkansas/frameo-injector/releases/download/FrameoInjector-0.1.0/FrameoInjector-0.1.0.tgz
     version: 0.1.0
-generated: "2024-01-27T00:59:43.010821831Z"
+generated: "2024-01-27T01:23:45.470306922Z"
