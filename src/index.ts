@@ -31,8 +31,8 @@ const replicateTask = async (overwriteFiles: boolean) => {
         })
 
         let ID_OF_THE_FOLDER = Environment.GOOGLE_DRIVE_FOLDER_ID;
-        await adapter.withClient(async (device: Device) => {
-            await googleDrive.listFiles(`'${ID_OF_THE_FOLDER}' in parents and trashed=false`, async (items) => {
+        await googleDrive.listFiles(`'${ID_OF_THE_FOLDER}' in parents and trashed=false`, async (items) => {
+            await adapter.withClient(async (device: Device) => {
                 Logger.info({external_google_folder_id: ID_OF_THE_FOLDER}, `Retrieved ${items.length} items from Google Drive`);
                 for (const file of items) {
                     Logger.info({external_google_folder_id: ID_OF_THE_FOLDER, external_file: file.title, external_file_md5: file.md5Checksum},
