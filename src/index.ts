@@ -150,6 +150,14 @@ const replicateTask = async (overwriteFiles: boolean) => {
                         }, `Pushing file to ADB device`);
                         await adapter.pushStream(fs.createReadStream(tmpFile), outputFilePath, device);
                     }
+                    Logger.info({
+                        external_google_folder_id: ID_OF_THE_FOLDER, 
+                        external_file: file.title, 
+                        external_file_md5: file.md5Checksum,
+                        device_file_path: outputFilePath,
+                        localtmp_file_path: tmpFilePath
+                    }, `Removing temporary file`);
+                    await fs.unlinkSync(tmpFilePath);
                 }
             });
         });

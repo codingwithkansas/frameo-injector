@@ -17,6 +17,7 @@ spec:
             image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
             imagePullPolicy: {{ .Values.image.imagePullPolicy }}
             command:
+            - node
             - /app/dist/index.js
             - replicate
             volumeMounts:
