@@ -1,7 +1,7 @@
 schedule: "0 3 * * *"
 image:
   repository: "ghcr.io/codingwithkansas/frameo-injector"
-  tag: "0.1.0"
+  tag: "0.1.1"
   imagePullPolicy: IfNotPresent
 
 # Env Config Secret

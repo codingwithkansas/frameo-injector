@@ -2,6 +2,7 @@ import { auth, drive } from "@googleapis/drive";
 import { createWriteStream } from 'fs';
 import * as ReadlineSDK from 'node:readline';
 import { readFileSync } from "fs";
+import Logger from './Logger';
 
 const Readline = ReadlineSDK.createInterface({
     input: process.stdin,
@@ -110,9 +111,20 @@ export default class GoogleDrive {
         })
     };
 
-    listFiles = (query: string) => {
-        return this.client.files.list({
-            q: query
-        });
+    listFiles = async (query: string, callback: (files: any[]) => Promise<void>, nextPageToken?: string) => {
+        const params = {
+            q: query,
+            pageToken: nextPageToken,
+            pageSize: 1000
+        };
+        const result = await this.client.files.list(params);
+        if (result.data.items) {
+            await callback(result.data.items);
+        }
+        if (result.data.nextPageToken) {
+            Logger.info(`Retrieving next page of Google Drive files for query`);
+            return this.listFiles(query, callback, result.data.nextPageToken);
+        }
+        return;
     }
 }

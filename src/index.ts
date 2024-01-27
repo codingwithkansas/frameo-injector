@@ -13,31 +13,28 @@ const replicateTask = async (overwriteFiles: boolean) => {
             Logger.error(`Google credentials token env vars are missing or empty`);
             throw new Error(`Google credentials token env vars are missing or empty`);
         }
-        const googleDrive = new GoogleDrive({
+        const oauthClientCreds = {
             clientId: Environment.GOOGLE_OAUTH2_CLIENT_ID,
             clientSecret: Environment.GOOGLE_OAUTH2_CLIENT_SECRET,
             redirectUri: Environment.GOOGLE_OAUTH2_CLIENT_REDIRECT_URI
-        }, {
+        };
+        const cachedTokens = {
             refresh_token: Environment.GOOGLE_OAUTH2_REFRESH_TOKEN,
             access_token: Environment.GOOGLE_OAUTH2_ACCESS_TOKEN,
             token_type: 'Bearer',
             expiry_date: parseInt(Environment.GOOGLE_OAUTH2_TOKEN_EXPIRY)
-        });
-        
-
+        };
+        const googleDrive = new GoogleDrive(oauthClientCreds, cachedTokens);
         const adapter = new AdbAdapter({
             adbServerHost: Environment.REMOTE_DEVICE_HOST,
             adbServerPort: parseInt(Environment.REMOTE_DEVICE_ADBPORT)
         })
 
-        // List files from google drive
         let ID_OF_THE_FOLDER = Environment.GOOGLE_DRIVE_FOLDER_ID;
-        const response = await googleDrive.listFiles(`'${ID_OF_THE_FOLDER}' in parents and trashed=false`);
-        if(response && response.data && response.data.items)
-        {
-            adapter.withClient(async (device: Device) => {
-                Logger.info({external_google_folder_id: ID_OF_THE_FOLDER}, `Retrieved ${response.data.items.length} items from Google Drive`);
-                for (const file of response.data.items) {
+        await googleDrive.listFiles(`'${ID_OF_THE_FOLDER}' in parents and trashed=false`, async (items) => {
+            await adapter.withClient(async (device: Device) => {
+                Logger.info({external_google_folder_id: ID_OF_THE_FOLDER}, `Retrieved ${items.length} items from Google Drive`);
+                for (const file of items) {
                     Logger.info({external_google_folder_id: ID_OF_THE_FOLDER, external_file: file.title, external_file_md5: file.md5Checksum},
                         `Analyzing file ${file.title} with checksum: ${file.md5Checksum}`);
                     let shouldPush = true;
@@ -155,10 +152,11 @@ const replicateTask = async (overwriteFiles: boolean) => {
                     }
                 }
             });
-        }
+        });
         process.exit(0);
     } catch (err) {
-        Logger.error(`Something went wrong: ${err.message}`, err.stack);
+        Logger.error(`Something went wrong: ${err.message} ${err.stack}`, err.stack);
+        throw err;
     }
 }
 

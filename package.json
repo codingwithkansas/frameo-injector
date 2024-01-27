@@ -1,6 +1,6 @@
 {
     "name": "frameo-injector",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "",
     "main": "dist/index.js",
     "files": [
@@ -8,7 +8,7 @@
     ],
     "scripts": {
         "clean": "rm -rf dist",
-        "build": "tsc",
+        "build": "tsc && cp src/tracing.js dist/tracing.js",
         "start": "npm run build && node dist/index.js replicate",
         "googlelogin": "npm run build && node dist/index.js google-login"
     },
