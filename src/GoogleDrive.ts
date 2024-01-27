@@ -112,19 +112,25 @@ export default class GoogleDrive {
     };
 
     listFiles = async (query: string, callback: (files: any[]) => Promise<void>, nextPageToken?: string) => {
-        const params = {
-            q: query,
-            pageToken: nextPageToken,
-            pageSize: 1000
-        };
-        const result = await this.client.files.list(params);
-        if (result.data.items) {
-            await callback(result.data.items);
+        while (true) {
+            const params = {
+                q: query,
+                pageToken: nextPageToken,
+                pageSize: 1000
+            };
+            const result = await this.client.files.list(params);
+            if (result.data.items) {
+                await callback(result.data.items);
+            } else {
+                return;
+            }
+            if (result.data.nextPageToken) {
+                Logger.info(`Retrieving next page of Google Drive files for query`);
+                nextPageToken = result.data.nextPageToken;
+            } else {
+                return;
+            }
         }
-        if (result.data.nextPageToken) {
-            Logger.info(`Retrieving next page of Google Drive files for query`);
-            return this.listFiles(query, callback, result.data.nextPageToken);
-        }
-        return;
+
     }
 }
